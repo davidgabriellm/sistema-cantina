@@ -1,4 +1,4 @@
-import { Model, DataTypes } from "sequelize";
+import { Model, DataTypes } from 'sequelize';
 
 class ItemPedido extends Model {
   static init(sequelize) {
@@ -7,6 +7,9 @@ class ItemPedido extends Model {
         quantidade: {
           type: DataTypes.INTEGER,
           allowNull: false,
+          validate: {
+            min: 1,
+          },
         },
         precoUnitario: {
           type: DataTypes.FLOAT,
@@ -15,14 +18,14 @@ class ItemPedido extends Model {
       },
       {
         sequelize,
-        modelName: "ItemPedido",
-      }
+        modelName: 'ItemPedido',
+      },
     );
   }
 
   static associate(models) {
-    this.belongsTo(models.Pedido, { foreignKey: "pedido_id" });
-    this.belongsTo(models.Produto, { foreignKey: "produto_id" });
+    this.belongsTo(models.Pedido, { foreignKey: 'pedido_id' });
+    this.belongsTo(models.Produto, { foreignKey: 'produto_id' });
   }
 }
 

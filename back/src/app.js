@@ -1,8 +1,8 @@
-import express from "express";
-import routes from "./routes";
-import cors from "cors";
+import express from 'express';
+import routes from './routes.js';
+import cors from 'cors';
 
-import "./db/index"
+import './db/index.js';
 
 class App {
   constructor() {
@@ -11,7 +11,7 @@ class App {
     this.routes();
   }
   middlewares() {
-    this.server.use(cors()); 
+    this.server.use(cors());
     this.server.use(express.json());
   }
   routes() {
