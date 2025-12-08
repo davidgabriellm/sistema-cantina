@@ -1,4 +1,4 @@
-export default{
+export default {
   dialect: "sqlite",
   storage: "./database.sqlite",
   logging: false,
