@@ -3,25 +3,28 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('clientes', [
+    await queryInterface.bulkInsert('usuarios', [
       {
         nome: 'Jean Marcos',
         email: 'jean@example.com',
-        saldo: 100.00,
+        senha: 'hash-ficticia-1',
+        funcao: 'Analista',
         created_at: new Date(),
         updated_at: new Date()
       },
       {
         nome: 'David Gabriel',
         email: 'david@example.com',
-        saldo: 50.00,
+        senha: 'hash-ficticia-2',
+        funcao: 'Desenvolvedor',
         created_at: new Date(),
         updated_at: new Date()
       },
       {
         nome: 'Pedro Lima',
         email: 'pedro@example.com',
-        saldo: 75.00,
+        senha: 'hash-ficticia-3',
+        funcao: 'Estagiário',
         created_at: new Date(),
         updated_at: new Date()
       }
@@ -29,6 +32,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('clientes', null, {});
+    await queryInterface.bulkDelete('usuarios', null, {});
   }
 };

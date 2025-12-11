@@ -18,10 +18,6 @@ module.exports = {
         allowNull: false, 
         unique: true 
       }, 
-      senha_hash: { 
-        type: Sequelize.STRING, 
-        allowNull: false, 
-      }, 
       saldo: { 
         type: Sequelize.DECIMAL(10, 2), 
         allowNull: false, 
