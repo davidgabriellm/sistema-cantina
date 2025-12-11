@@ -1,10 +1,10 @@
 import { Sequelize } from 'sequelize';
-import config from '../config/database';
+import config from '../config/database.js';
 
-import Cliente from '../app/models/Cliente';
-import Pedido from '../app/models/Pedido';
-import Produto from '../app/models/Produto';
-import ItemPedido from '../app/models/ItemPedido';
+import Cliente from '../app/models/Cliente.js';
+import Pedido from '../app/models/Pedido.js';
+import Produto from '../app/models/Produto.js';
+import ItemPedido from '../app/models/ItemPedido.js';
 
 const models = [Cliente, Pedido, Produto, ItemPedido];
 

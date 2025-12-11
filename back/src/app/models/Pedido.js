@@ -1,4 +1,4 @@
-import { Model, DataTypes } from "sequelize";
+import { Model, DataTypes } from 'sequelize';
 
 class Pedido extends Model {
   static init(sequelize) {
@@ -14,8 +14,8 @@ class Pedido extends Model {
           defaultValue: 0.0,
         },
         status: {
-          type: DataTypes.ENUM("aberto", "pago", "cancelado"),
-          defaultValue: "aberto",
+          type: DataTypes.ENUM('aberto', 'pago', 'cancelado'),
+          defaultValue: 'aberto',
         },
         dataPedido: {
           type: DataTypes.DATE,
@@ -24,17 +24,18 @@ class Pedido extends Model {
       },
       {
         sequelize,
-        modelName: "Pedido",
-      }
+        modelName: 'Pedido',
+      },
     );
   }
 
   static associate(models) {
-    this.belongsTo(models.Cliente, { foreignKey: "cliente_id" });
+    this.belongsTo(models.Cliente, { foreignKey: 'cliente_id' });
 
     this.belongsToMany(models.Produto, {
       through: models.ItemPedido,
-      foreignKey: "pedido_id",
+      foreignKey: 'pedido_id',
+      otherKey: 'produto_id',
     });
   }
 }
