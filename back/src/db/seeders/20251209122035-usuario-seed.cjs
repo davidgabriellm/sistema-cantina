@@ -7,7 +7,7 @@ module.exports = {
       {
         nome: 'Jean Marcos',
         email: 'jean@example.com',
-        senha: 'hash-ficticia-1',
+        senha_hash: 'hash-ficticia-1',
         funcao: 'Analista',
         created_at: new Date(),
         updated_at: new Date()
@@ -15,7 +15,7 @@ module.exports = {
       {
         nome: 'David Gabriel',
         email: 'david@example.com',
-        senha: 'hash-ficticia-2',
+        senha_hash: 'hash-ficticia-2',
         funcao: 'Desenvolvedor',
         created_at: new Date(),
         updated_at: new Date()
@@ -23,7 +23,7 @@ module.exports = {
       {
         nome: 'Pedro Lima',
         email: 'pedro@example.com',
-        senha: 'hash-ficticia-3',
+        senha_hash: 'hash-ficticia-3',
         funcao: 'Estagiário',
         created_at: new Date(),
         updated_at: new Date()
