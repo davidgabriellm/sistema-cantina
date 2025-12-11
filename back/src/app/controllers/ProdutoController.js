@@ -83,17 +83,27 @@ class ProdutoController {
 
   
   async delete(req, res) {
-    const { id } = req.params;
+    try {
+      const { id } = req.params;
 
-    const produto = await Produto.findByPk(id);
+      if (!id) {
+        return res.status(400).json({ error: "ID não informado" });
+      }
 
-    if (!produto) {
-      return res.status(404).json({ error: "Produto não encontrado" });
+      const produto = await Produto.findByPk(id);
+
+      if (!produto) {
+        return res.status(404).json({ error: "Produto não encontrado" });
+      }
+      
+
+      await produto.destroy();
+
+      return res.json({ message: "Produto removido com sucesso" });
+    } catch (error) {
+      console.error("Erro ao deletar produto:", error);
+      return res.status(500).json({ error: "Erro interno no servidor" });
     }
-
-    await produto.destroy();
-
-    return res.json({ message: "Produto removido com sucesso" });
   }
 }
 
