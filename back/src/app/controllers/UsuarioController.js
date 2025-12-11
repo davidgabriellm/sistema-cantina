@@ -97,7 +97,7 @@ class UsuarioController {
       id: usuario.id,
       nome: usuario.nome,
       email: usuario.email,
-      saldo: usuario.saldo,
+      funcao: usuario.funcao,
     });
   }
 
