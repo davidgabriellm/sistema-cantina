@@ -5,31 +5,32 @@ import { MdShoppingCart } from "react-icons/md";
 import { AiFillFund } from "react-icons/ai";
 
 
+
 const Nav = () => {
-  return <div className="w-2/12 p-4 bg-gray-50">
-    <ul className="flex flex-col gap-3">
+  return <div className="w-2/12 p-4 bg-gray-50 border border-gray-200">
+    <ul className="flex flex-col gap-2">
         <li>
-            <Link to="/cliente" className="flex justify-start items-center gap-2">
+            <Link to="/" className="flex justify-start items-center gap-2 hover:bg-gray-400 px-3 py-2 rounded-2xl">
             <IoPersonSharp size={14}/>
-            <span className="text-[14px]">Cliente</span>
+            <span className="text-[14px]">Dashboard</span>
             </Link>
         </li>
         <li>
-            <Link to="/cliente" className="flex justify-start items-center gap-2">
+            <Link to="/produtos" className="flex justify-start items-center gap-2 hover:bg-gray-400 px-3 py-2 rounded-2xl">
             <BsBriefcaseFill size={14}/>
             <span className="text-[14px]">Produtos</span>
             </Link>
         </li>
         <li>
-            <Link to="/cliente" className="flex justify-start items-center gap-2">
+            <Link to="/clientes" className="flex justify-start items-center gap-2 hover:bg-gray-400 px-3 py-2 rounded-2xl">
             <MdShoppingCart size={14}/>
-            <span className="text-[14px]">Vendas</span>
+            <span className="text-[14px]">Clientes</span>
             </Link>
         </li>
         <li>
-            <Link to="/cliente" className="flex justify-start items-center gap-2">
+            <Link to="/vendas" className="flex justify-start items-center gap-2 hover:bg-gray-400 px-3 py-2 rounded-2xl">
             <AiFillFund size={14}/>
-            <span className="text-[14px]">Relatórios</span>
+            <span className="text-[14px]">Vendas</span>
             </Link>
         </li>
     </ul>

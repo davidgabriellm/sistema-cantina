@@ -4,8 +4,10 @@ import './index.css';
 import App from './App.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import Home from './pages/Home.tsx';
-
+import Dashboard from './pages/Dashboard.tsx';
+import Produtos from './pages/Produtos.tsx';
+import './globals.css'
+import Clientes from './pages/Clientes.tsx';
 
 const router = createBrowserRouter([
   {
@@ -14,7 +16,15 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Home />,
+        element: <Dashboard />,
+      },
+      {
+        path: '/produtos',
+        element: <Produtos />,
+      },
+      {
+        path: '/clientes',
+        element: <Clientes />,
       },
     ],
   },

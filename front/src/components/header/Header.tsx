@@ -10,7 +10,7 @@ const Header = () => {
             <h1 className="text-[16px]">Cantina Escolar</h1>
         </div>
         <div className="p-4 flex gap-2 justify-center items-center">
-            <button className="text-[15px] font-light cursor-pointer hover:underline">Faça seu login</button>
+            <button className="text-[15px] font-light">David</button>
             <img src={profile} alt="" className="text-[16px]"/>
         </div>
     </div>
