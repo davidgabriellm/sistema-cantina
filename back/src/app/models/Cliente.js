@@ -19,11 +19,6 @@ class Cliente extends Model {
           allowNull: false,
           validate: { isEmail: true },
         },
-        senha: DataTypes.VIRTUAL,
-        senha_hash: {
-          type: DataTypes.STRING,
-          allowNull: false,
-        },
         saldo: {
           type: DataTypes.FLOAT,
           defaultValue: 0.0,
@@ -34,20 +29,8 @@ class Cliente extends Model {
         modelName: 'Cliente',
       }
     );
-
-    this.addHook('beforeSave', async (cliente) => {
-      if (cliente.senha) {
-        cliente.senha_hash = await bcrypt.hash(cliente.senha, 8);
-      }
-    });
-
-    return this;
   }
-
-  checkPassword(senha) {
-    return bcrypt.compare(senha, this.senha_hash);
-  }
-
+  
   static associate(models) {
     this.hasMany(models.Pedido, { foreignKey: 'cliente_id' });
   }
