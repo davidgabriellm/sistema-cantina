@@ -2,40 +2,30 @@ import { Model, DataTypes } from 'sequelize';
 
 class Pedido extends Model {
   static init(sequelize) {
-    return super.init(
+    super.init(
       {
         id: {
           type: DataTypes.INTEGER,
-          autoIncrement: true,
           primaryKey: true,
+          autoIncrement: true
         },
-        total: {
-          type: DataTypes.FLOAT,
-          defaultValue: 0.0,
-        },
-        status: {
-          type: DataTypes.ENUM('aberto', 'pago', 'cancelado'),
-          defaultValue: 'aberto',
-        },
-        dataPedido: {
-          type: DataTypes.DATE,
-          defaultValue: DataTypes.NOW,
-        },
+        total: DataTypes.DECIMAL(10, 2),
+        data_pedido: DataTypes.DATE,
       },
       {
         sequelize,
-        modelName: 'Pedido',
-      },
+        tableName: 'pedidos',
+        underscored: true,
+      }
     );
   }
 
   static associate(models) {
-    this.belongsTo(models.Cliente, { foreignKey: 'cliente_id' });
+    this.belongsTo(models.Cliente, { foreignKey: 'cliente_id', as: 'cliente' });
 
-    this.belongsToMany(models.Produto, {
-      through: models.ItemPedido,
+    this.hasMany(models.ItemPedido, {
       foreignKey: 'pedido_id',
-      otherKey: 'produto_id',
+      as: 'itens'
     });
   }
 }
