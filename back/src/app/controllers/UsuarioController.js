@@ -21,8 +21,10 @@ class UsuarioController {
       funcao: Yup.string(),
     });
 
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Erro na validação dos dados.' });
+    try {
+      await schema.validate(req.body, { abortEarly: false });
+    } catch (err) {
+      return res.status(400).json({ error: err.errors });
     }
 
     const { nome, email, senha, funcao } = req.body;
@@ -36,7 +38,7 @@ class UsuarioController {
       nome,
       email,
       senha,
-      funcao,
+      funcao: funcao || 'usuario',
     });
 
     return res
@@ -44,17 +46,6 @@ class UsuarioController {
       .json({ id, nome, email, funcao, createdAt, updatedAt });
   }
 
-  async me(req, res) {
-    const usuario = await Usuario.findByPk(req.user_id, {
-      attributes: ['id', 'nome', 'email', 'funcao'],
-    });
-
-    if (!usuario) {
-      return res.status(404).json({ error: 'Usuário não encontrado.' });
-    }
-
-    return res.json(usuario);
-  }
 
   async index(req, res) {
     const usuarios = await Usuario.findAll({

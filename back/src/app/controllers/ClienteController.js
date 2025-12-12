@@ -33,18 +33,7 @@ class ClienteController {
       .json({ id, nome, email, saldo, createdAt, updatedAt });
   }
 
-  async me(req, res) {
-    const cliente = await Cliente.findByPk(req.user_id, {
-      attributes: ['id', 'nome', 'email', 'saldo'],
-    });
-
-    if (!cliente) {
-      return res.status(404).json({ error: 'Cliente não encontrado.' });
-    }
-
-    return res.json(cliente);
-  }
-
+  
   async index(req, res) {
     const clientes = await Cliente.findAll({
       attributes: ['id', 'nome', 'email', 'saldo', 'createdAt'],
