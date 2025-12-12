@@ -15,6 +15,7 @@ export function usePagarPedido() {
     onSuccess: (data, pedidoId) => {
       queryClient.invalidateQueries({ queryKey: ['pedidos'] }); 
       queryClient.invalidateQueries({ queryKey: ['pedidos', pedidoId] }); 
+      queryClient.invalidateQueries({ queryKey: ['clientes'] });
     },
   });
 }

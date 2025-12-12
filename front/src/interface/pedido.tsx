@@ -5,15 +5,15 @@ export interface Pedido {
   createdAt: string;
   updatedAt: string;
 
-  Cliente: {
+  cliente: {
     id: number;
     nome: string;
   };
 
-  ItemPedidos: {
+  itens: {
     id: number;
     quantidade: number;
-    Produto: {
+    produto: {
       id: number;
       nome: string;
       preco: number;

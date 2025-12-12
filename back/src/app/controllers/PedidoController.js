@@ -24,6 +24,7 @@ class PedidoController {
     }
 
     const { clienteId, itens } = req.body;
+    console.log(clienteId, typeof clienteId);
 
     const cliente = await Cliente.findByPk(clienteId);
     if (!cliente) {
@@ -51,11 +52,15 @@ class PedidoController {
 
       total += precoUnitario * item.quantidade;
 
+      console.log('🔥 CHEGOU NO BACKEND /pedidos', req.body);
+
+      console.log('preço: ', precoUnitario);
+
       await ItemPedido.create({
         pedido_id: pedido.id,
         produto_id: item.produtoId,
         quantidade: item.quantidade,
-        precoUnitario,
+        preco_unitario: precoUnitario,
       });
     }
 
@@ -94,7 +99,7 @@ class PedidoController {
     const { id } = req.params;
 
     const pedido = await Pedido.findByPk(id, {
-      include: [{ model: Cliente }],
+      include: [{ model: Cliente, as: 'cliente' }],
     });
 
     if (!pedido)
@@ -104,12 +109,12 @@ class PedidoController {
       return res.status(400).json({ error: 'Pedido não pode ser pago' });
     }
 
-    if (pedido.Cliente.saldo < pedido.total) {
+    if (Number(pedido.cliente.saldo) < Number(pedido.total)) {
       return res.status(400).json({ error: 'Saldo insuficiente' });
     }
 
-    pedido.Cliente.saldo -= pedido.total;
-    await pedido.Cliente.save();
+    pedido.cliente.saldo = Number(pedido.cliente.saldo) - Number(pedido.total);
+    await pedido.cliente.save();
 
     pedido.status = 'pago';
     await pedido.save();

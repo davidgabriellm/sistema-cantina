@@ -21,7 +21,9 @@ export interface PedidoCreateResponse {
 }
 
 async function createPedido(data: PedidoCreateData) {
+  console.log("Enviando pedido:", data);
   const response = await api.post<PedidoCreateResponse>('/pedidos', data);
+  console.log("Resposta do servidor:", response);
   return response.data;
 }
 

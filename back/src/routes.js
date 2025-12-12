@@ -29,8 +29,8 @@ routes.put("/produtos/:id", ProdutoController.update);
 routes.patch("/produtos/:id/ativo", ProdutoController.toggleAtivo);
 routes.delete("/produtos/:id", ProdutoController.delete);
 
-routes.get("/pedido", PedidoController.listar)
-routes.post("/pedido", PedidoController.create)
+routes.get("/pedidos", PedidoController.listar)
+routes.post("/pedidos", PedidoController.create)
 routes.put("/pedidos/:id/pagar", PedidoController.pagar)
 routes.put("/pedidos/:id/cancelar", PedidoController.cancelar)
 

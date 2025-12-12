@@ -25,7 +25,7 @@ class ClienteController {
     const { id, createdAt, updatedAt } = await Cliente.create({
       nome,
       email,
-      saldo,
+      saldo : Number(saldo),
     });
 
     return res
@@ -74,7 +74,7 @@ class ClienteController {
       id: cliente.id,
       nome: cliente.nome,
       email: cliente.email,
-      saldo: cliente.saldo,
+      saldo: Number(req.body.saldo),
     });
   }
 

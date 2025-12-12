@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from "react";
 import { IoAddOutline } from "react-icons/io5";
 import { IoIosSearch } from "react-icons/io";
-import { FaEye, FaMoneyBillWave } from "react-icons/fa";
+import {FaMoneyBillWave } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
+import { useWatch } from "react-hook-form";
 
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,11 +20,10 @@ import type { Pedido } from "../interface/pedido";
 import type { Product } from "../interface/product";
 import type { Cliente } from "../interface/cliente";
 
-// ----------------- Validação -----------------
 const itemPedidoSchema = z.object({
   produtoId: z.number().min(1, "Selecione um produto"),
   produtoNome: z.string().min(1),
-  produtoPreco: z.number().min(0),
+  produtoPreco: z.string(),
   quantidade: z.number().min(1, "Mín. 1 item"),
 });
 
@@ -35,12 +35,10 @@ const pedidoSchema = z.object({
 type PedidoSchema = z.infer<typeof pedidoSchema>;
 
 const Pedidos = () => {
-  // filtros e estados
   const [statusFiltro, setStatusFiltro] = useState<Pedido["status"] | "">("");
   const [search, setSearch] = useState("");
   const [openModal, setOpenModal] = useState(false);
 
-  // hooks dados/mutações
   const { data: pedidos, isLoading: isLoadingPedidos } = usePedidos(statusFiltro || undefined);
   const { data: produtos, isLoading: isLoadingProdutos } = useProducts();
   const { data: clientes, isLoading: isLoadingClientes } = useClientes();
@@ -49,13 +47,11 @@ const Pedidos = () => {
   const { mutate: pagarPedido, isPending: paying } = usePagarPedido();
   const { mutate: cancelarPedido, isPending: cancelling } = useCancelarPedido();
 
-  // formulário
   const {
     control,
     register,
     handleSubmit,
     setValue,
-    watch,
     reset,
     formState: { errors },
   } = useForm<PedidoSchema>({
@@ -66,28 +62,36 @@ const Pedidos = () => {
     },
   });
 
+  console.log(errors)
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "itens",
   });
 
-  const watchedItens = watch("itens");
+  const watchedItens = useWatch({
+  control,
+  name: "itens",
+});
 
-  // total calculado
+console.log(watchedItens)
+
+  // TOTAL calculado com segurança
   const totalPedido = useMemo(
     () =>
-      watchedItens?.reduce((acc, it) => acc + (it?.produtoPreco || 0) * (it?.quantidade || 0), 0) ??
-      0,
+      watchedItens?.reduce(
+        (acc, it) => acc + (Number(it?.produtoPreco) || 0) * (Number(it?.quantidade) || 0),
+        0
+      ) ?? 0,
     [watchedItens]
   );
 
-  // filtragem/ordenação
   if (isLoadingPedidos || isLoadingProdutos || isLoadingClientes) return <p>Carregando...</p>;
 
   const pedidosFiltrados = (pedidos || []).filter((pedido) => {
-    const clienteNome = pedido.Cliente?.nome ?? "";
-    const itensResumo = (pedido.ItemPedidos || [])
-      .map((ip) => `${ip.Produto?.nome ?? ""}`)
+    const clienteNome = pedido.cliente?.nome ?? "";
+    const itensResumo = (pedido.itens || [])
+      .map((ip) => `${ip.produto?.nome ?? ""}`)
       .join(" ");
     const termo = search.trim().toLowerCase();
     if (!termo) return true;
@@ -95,13 +99,13 @@ const Pedidos = () => {
     return (
       String(pedido.id).includes(termo) ||
       clienteNome.toLowerCase().includes(termo) ||
-      pedido.status.toLowerCase().includes(termo) ||
+      (pedido.status ?? "").toLowerCase().includes(termo) ||
       itensResumo.toLowerCase().includes(termo)
     );
   });
 
-  // criar pedido -> chamar mutation
   const onSalvar = (data: PedidoSchema) => {
+    console.log('onSalvar')
     const payload = {
       clienteId: data.clienteId,
       itens: data.itens.map((it) => ({
@@ -122,30 +126,23 @@ const Pedidos = () => {
     });
   };
 
-  // pagar pedido
   const handlePagar = (pedidoId: number) => {
     if (!window.confirm("Marcar este pedido como PAGO?")) return;
 
     pagarPedido(pedidoId, {
-      onSuccess: () => {
-        alert("Pedido marcado como PAGO.");
-      },
+      onSuccess: () => alert("Pedido marcado como PAGO."),
       onError: (err: any) => {
         console.error("Erro ao pagar:", err);
-        const msg = err?.response?.data?.error || "Erro ao pagar pedido (ver console)";
-        alert(msg);
+        alert(err?.response?.data?.error || "Erro ao pagar pedido");
       },
     });
   };
 
-  // cancelar pedido
   const handleCancelar = (pedidoId: number) => {
     if (!window.confirm("Deseja realmente cancelar este pedido?")) return;
 
     cancelarPedido(pedidoId, {
-      onSuccess: () => {
-        alert("Pedido cancelado.");
-      },
+      onSuccess: () => alert("Pedido cancelado."),
       onError: (err: any) => {
         console.error("Erro ao cancelar:", err);
         alert(err?.response?.data?.error || "Erro ao cancelar pedido");
@@ -153,7 +150,6 @@ const Pedidos = () => {
     });
   };
 
-  // adicionar item vazio
   const handleAdicionarItem = () => {
     append({
       produtoId: 0,
@@ -163,7 +159,6 @@ const Pedidos = () => {
     });
   };
 
-  // quando usuario seleciona produto no select do item, atualiza campos relacionados
   const handleProdutoChange = (index: number, produtoId: number) => {
     const produto = produtos?.find((p) => p.id === produtoId);
     if (!produto) {
@@ -180,7 +175,6 @@ const Pedidos = () => {
 
   return (
     <div className="px-7 py-3 flex flex-col relative w-full">
-      {/* Novo Pedido */}
       <button
         onClick={() => {
           reset({ clienteId: 0, itens: [] });
@@ -195,7 +189,6 @@ const Pedidos = () => {
       <h1 className="font-bold text-2xl">Pedidos</h1>
       <p className="text-gray-400 text-[13px]">Gerencie os pedidos da cantina</p>
 
-      {/* Filtros / Busca */}
       <div className="mt-5 flex gap-4 items-center">
         <select
           value={statusFiltro}
@@ -220,7 +213,7 @@ const Pedidos = () => {
         </div>
       </div>
 
-      {/* Tabela */}
+      {/* TABELA */}
       <div className="mt-8 mb-15 border border-gray-200 rounded-2xl overflow-hidden">
         <table className="w-full">
           <thead>
@@ -236,86 +229,83 @@ const Pedidos = () => {
           </thead>
 
           <tbody>
-            {pedidosFiltrados.map((pedido) => (
-              <tr key={pedido.id} className="border-t border-gray-200">
-                <td className="py-6 px-3 text-[15px]">#{pedido.id}</td>
+            {pedidosFiltrados.map((pedido) => {
+              const status = pedido.status ?? "indefinido";
 
-                <td className="py-6 px-3 text-[15px]">
-                  {pedido.Cliente?.nome ?? "N/A"}
-                </td>
+              return (
+                <tr key={pedido.id} className="border-t border-gray-200">
+                  <td className="py-6 px-3 text-[15px]">#{pedido.id}</td>
 
-                <td className="py-6 px-3 text-[15px]">
-                  {/* mostra contagem e um resumo dos nomes dos produtos */}
-                  <div>
-                    <div className="text-sm text-gray-600">
-                      {pedido.ItemPedidos?.length ?? 0} item(s)
+                  <td className="py-6 px-3 text-[15px]">
+                    {pedido.cliente?.nome ?? "N/A"}
+                  </td>
+
+                  <td className="py-6 px-3 text-[15px]">
+                    <div>
+                      <div className="text-sm text-gray-600">
+                        {pedido.itens?.length ?? 0} item(s)
+                      </div>
+                      
                     </div>
-                    <div className="text-xs text-gray-400">
-                      {(pedido.ItemPedidos || [])
-                        .map((ip) => `${ip.Produto?.nome ?? "—"}${ip.quantidade ? ` (${ip.quantidade})` : ""}`)
-                        .join(", ")}
-                    </div>
-                  </div>
-                </td>
+                  </td>
 
-                <td className="py-6 px-3 text-[15px] font-semibold">
-                  R$ {(pedido.total ?? 0).toFixed(2)}
-                </td>
+                  {/* TOTAL corrigido */}
+                  <td className="py-6 px-3 text-[15px] font-semibold">
+                    R$ {(Number(pedido.total) || 0).toFixed(2)}
+                  </td>
 
-                <td className="py-6 px-3 text-[15px]">
-                  <span
-                    className={`px-3 py-1 rounded-full text-white text-xs ${
-                      pedido.status === "aberto"
-                        ? "bg-yellow-500"
-                        : pedido.status === "pago"
-                        ? "bg-green-500"
-                        : "bg-red-500"
-                    }`}
-                  >
-                    {pedido.status.toUpperCase()}
-                  </span>
-                </td>
+                  <td className="py-6 px-3 text-[15px]">
+                    <span
+                      className={`px-3 py-1 rounded-full text-white text-xs ${
+                        status === "aberto"
+                          ? "bg-yellow-500"
+                          : status === "pago"
+                          ? "bg-green-500"
+                          : "bg-red-500"
+                      }`}
+                    >
+                      {status.toUpperCase()}
+                    </span>
+                  </td>
 
-                <td className="py-6 px-3 text-[15px]">
-                  {new Date(pedido.createdAt || Date.now()).toLocaleString()}
-                </td>
+                  <td className="py-6 px-3 text-[15px]">
+                    {new Date(pedido.createdAt).toLocaleString()}
+                  </td>
 
-                <td className="py-6 px-3 text-[15px] flex items-center gap-4">
-                  <button title="Ver Detalhes">
-                    <FaEye size={18} className="cursor-pointer" />
-                  </button>
+                  <td className="py-6 px-3 text-[15px] flex items-center gap-4">
 
-                  {pedido.status === "aberto" && (
-                    <>
-                      <button
-                        title="Marcar como Pago"
-                        onClick={() => handlePagar(pedido.id)}
-                      >
-                        <FaMoneyBillWave
-                          size={18}
-                          className="cursor-pointer text-green-500 hover:text-green-700"
-                        />
-                      </button>
+                    {status === "aberto" && (
+                      <>
+                        <button
+                          title="Marcar como Pago"
+                          onClick={() => handlePagar(pedido.id)}
+                        >
+                          <FaMoneyBillWave
+                            size={18}
+                            className="cursor-pointer text-green-500 hover:text-green-700"
+                          />
+                        </button>
 
-                      <button
-                        title="Cancelar Pedido"
-                        onClick={() => handleCancelar(pedido.id)}
-                      >
-                        <RiDeleteBin5Line
-                          size={18}
-                          className="cursor-pointer text-red-500 hover:text-red-700"
-                        />
-                      </button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
+                        <button
+                          title="Cancelar Pedido"
+                          onClick={() => handleCancelar(pedido.id)}
+                        >
+                          <RiDeleteBin5Line
+                            size={18}
+                            className="cursor-pointer text-red-500 hover:text-red-700"
+                          />
+                        </button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
 
-      {/* Modal de Novo Pedido */}
+      {/* MODAL */}
       {openModal && (
         <div
           className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 px-3"
@@ -430,11 +420,15 @@ const Pedidos = () => {
                   </div>
                 ))}
 
-                {fields.length === 0 && <p className="text-gray-500 text-sm">Adicione produtos ao pedido.</p>}
+                {fields.length === 0 && (
+                  <p className="text-gray-500 text-sm">Adicione produtos ao pedido.</p>
+                )}
               </div>
 
               <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-200">
-                <span className="font-bold text-xl">Total: R$ {totalPedido.toFixed(2)}</span>
+                <span className="font-bold text-xl">
+                  Total: R$ {totalPedido.toFixed(2)}
+                </span>
 
                 <div className="flex gap-3">
                   <button

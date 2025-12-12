@@ -7,16 +7,22 @@ class Pedido extends Model {
         id: {
           type: DataTypes.INTEGER,
           primaryKey: true,
-          autoIncrement: true
+          autoIncrement: true,
         },
         total: DataTypes.DECIMAL(10, 2),
         data_pedido: DataTypes.DATE,
+        status: {
+          type: DataTypes.ENUM('aberto', 'pago', 'cancelado'),
+          allowNull: false,
+          defaultValue: 'aberto',
+        },
       },
+
       {
         sequelize,
         tableName: 'pedidos',
         underscored: true,
-      }
+      },
     );
   }
 
@@ -25,7 +31,7 @@ class Pedido extends Model {
 
     this.hasMany(models.ItemPedido, {
       foreignKey: 'pedido_id',
-      as: 'itens'
+      as: 'itens',
     });
   }
 }
