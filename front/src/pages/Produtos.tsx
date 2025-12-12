@@ -64,7 +64,6 @@ const Produtos = () => {
 
   if (isLoading) return <p>Carregando...</p>;
 
-  // Ordenação e filtragem
   const produtosOrdenados = [...(produtos || [])].sort((a, b) => {
     if (a.ativo && !b.ativo) return -1;
     if (!a.ativo && b.ativo) return 1;
@@ -75,7 +74,6 @@ const Produtos = () => {
     produto.nome.toLowerCase().includes(search.toLowerCase())
   );
 
-  // SALVAR (CRIAR OU EDITAR)
   const handleSalvar = (data: ProdutoSchema) => {
     if (produtoEditando) {
       updateProduto(

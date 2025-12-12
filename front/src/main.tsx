@@ -10,6 +10,7 @@ import './globals.css';
 import Clientes from './pages/Clientes.tsx';
 import Login from './pages/Login.tsx';
 import Register from './pages/Register.tsx';
+import Pedidos from './pages/Pedidos.tsx';
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: '/clientes',
         element: <Clientes />,
+      },
+      {
+        path: '/pedidos',
+        element: <Pedidos />,
       },
     ],
   },

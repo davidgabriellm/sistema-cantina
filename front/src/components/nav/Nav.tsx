@@ -28,7 +28,7 @@ const Nav = () => {
             </Link>
         </li>
         <li>
-            <Link to="/vendas" className="flex justify-start items-center gap-2 hover:bg-gray-400 px-3 py-2 rounded-2xl">
+            <Link to="/pedidos" className="flex justify-start items-center gap-2 hover:bg-gray-400 px-3 py-2 rounded-2xl">
             <AiFillFund size={14}/>
             <span className="text-[14px]">Vendas</span>
             </Link>
