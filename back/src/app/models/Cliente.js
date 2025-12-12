@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
-import bcrypt from 'bcryptjs';
+
 
 class Cliente extends Model {
   static init(sequelize) {
@@ -27,6 +27,7 @@ class Cliente extends Model {
       {
         sequelize,
         modelName: 'Cliente',
+        
       }
     );
   }

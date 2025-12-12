@@ -3,12 +3,19 @@ import SessaoController from "./app/controllers/SessaoController.js";
 import ClienteController from "./app/controllers/ClienteController.js"
 import PedidoController from "./app/controllers/PedidoController.js";
 import ProdutoController from "./app/controllers/ProdutoController.js";
+import UsuarioController from "./app/controllers/UsuarioController.js";
+
 
 const routes = new Router();
 
 routes.post("/sessions", SessaoController.create);
-routes.post("/users", ClienteController.register);
-routes.get("/me", ClienteController.me);
+routes.post("/usuarios", UsuarioController.register);
+
+
+routes.post("/clientes", ClienteController.register)
+routes.get("/clientes", ClienteController.index)
+routes.put("/clientes/:id", ClienteController.update)
+routes.delete("/clientes/:id", ClienteController.delete)
 
 routes.post("/pedidos", PedidoController.create);
 routes.get("/pedidos", PedidoController.listar);

@@ -19,7 +19,7 @@ export default async (req, res, next) => {
 
        console.log("DECODED TOKEN:", decoded);
 
-       req.user_id = decoded.id; 
+       req.user_id = decoded.id || decoded.userId; 
        
 
        return next()

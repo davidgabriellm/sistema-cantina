@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 
 class Usuario extends Model {
   static init(sequelize) {
+
     super.init(
       {
         id: {
@@ -32,12 +33,14 @@ class Usuario extends Model {
       {
         sequelize,
         modelName: 'Usuario',
-      }
+        tableName: 'usuarios',
+        underscored: true,
+      },
     );
 
-    this.addHook('beforeSave', async (usuario) => {
-      if (usuario.senha) {
-        usuario.senha_hash = await bcrypt.hash(usuario.senha, 8);
+    this.addHook("beforeValidate", async (user) => {
+      if (user.senha) {
+        user.senha_hash = await bcrypt.hash(user.senha, 8);
       }
     });
 
@@ -46,10 +49,6 @@ class Usuario extends Model {
 
   checkPassword(senha) {
     return bcrypt.compare(senha, this.senha_hash);
-  }
-
-  static associate(models) {
-    this.hasMany(models.Pedido, { foreignKey: 'usuario_id' });
   }
 }
 

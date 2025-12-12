@@ -6,8 +6,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Dashboard from './pages/Dashboard.tsx';
 import Produtos from './pages/Produtos.tsx';
-import './globals.css'
+import './globals.css';
 import Clientes from './pages/Clientes.tsx';
+import Login from './pages/Login.tsx';
+import Register from './pages/Register.tsx';
 
 const router = createBrowserRouter([
   {
@@ -28,15 +30,22 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: '/register',
+    element: <Register />,
+  },
+  {
+    path: '/login',
+    element: <Login />,
+  },
 ]);
 
-
-const client = new QueryClient()
+const client = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={client}>
-    <RouterProvider router={router}/>
+      <RouterProvider router={router} />
     </QueryClientProvider>
   </StrictMode>,
 );
