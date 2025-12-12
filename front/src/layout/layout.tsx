@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
-import Nav from "../components/Nav";
-import Header from "../components/Header";
+import type { ReactNode } from "react";
+import Nav from "../components/nav/Nav";
+import Header from "../components/header/Header";
 
 type Props = {
   children: ReactNode;

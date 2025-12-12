@@ -4,6 +4,7 @@ import ClienteController from "./app/controllers/ClienteController.js"
 import PedidoController from "./app/controllers/PedidoController.js";
 import ProdutoController from "./app/controllers/ProdutoController.js";
 import UsuarioController from "./app/controllers/UsuarioController.js";
+import DashboardController from "./app/controllers/DashboardController.js";
 
 
 const routes = new Router();
@@ -11,6 +12,7 @@ const routes = new Router();
 routes.post("/sessions", SessaoController.create);
 routes.post("/usuarios", UsuarioController.register);
 
+routes.get("/dashboard", DashboardController.index);
 
 routes.post("/clientes", ClienteController.register)
 routes.get("/clientes", ClienteController.index)
