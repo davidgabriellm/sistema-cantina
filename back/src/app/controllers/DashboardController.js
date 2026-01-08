@@ -31,11 +31,21 @@ class DashboardController {
       },
     });
 
+     const clientesHoje = await Cliente.findAll({
+      where: {
+        created_at: {
+          [Op.between]: [hojeInicio, hojeFim],
+        },
+      },
+      order: [['created_at', 'DESC']],
+    });
+
     return res.json({
       totalMes: totalMes || 0,
       novosClientesMes,
       pedidosHoje,
       pedidosMes,
+      clientesHoje
     });
   }
 }
