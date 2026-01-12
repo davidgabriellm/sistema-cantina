@@ -12,13 +12,13 @@ export default function ToggleSwitch({ value, onChange }: ToggleProps) {
     <button
       onClick={handleToggle}
       className={`
-        relative inline-flex h-6 w-12 items-center rounded-full cursor-pointer transition-colors
+        relative inline-flex h-5 w-10 sm:w-12 sm:h-6 items-center rounded-full cursor-pointer transition-colors
         ${value ? "bg-green-500" : "bg-gray-400"}
       `}
     >
       <span
         className={`
-          inline-block h-5 w-5 transform rounded-full bg-white transition-transform
+          inline-block h-3 w-3 sm:w-5 sm:h-5 transform rounded-full bg-white transition-transform
           ${value ? "translate-x-6" : "translate-x-1"}
         `}
       />

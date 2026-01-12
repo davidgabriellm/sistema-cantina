@@ -115,14 +115,14 @@ const Clientes = () => {
   };
 
   return (
-    <div className="px-7 py-3 flex flex-col relative w-full">
+    <div className="md:px-7 md:py-3 px-2 py-1 flex flex-col relative w-full">
       <button
         onClick={() => {
           reset();
           setClienteEditando(null);
           setOpenModal(true);
         }}
-        className="absolute right-6 top-4 cursor-pointer flex gap-3 bg-blue-600 p-3 rounded-2xl items-center text-white"
+        className="absolute right-2 top-16 cursor-pointer flex gap-3 bg-blue-600 p-3 rounded-2xl items-center text-white md:top-4 md:right-6"
       >
         <IoAddOutline />
         <span className="text-[14px]">Novo Cliente</span>
@@ -133,7 +133,7 @@ const Clientes = () => {
         Gerencie os clientes da cantina
       </p>
 
-      <div className="mt-5 relative w-1/3">
+      <div className="mt-5 relative ld:w-1/3 w-[40%] md:w-2/3">
         <input
           type="search"
           value={search}
@@ -144,14 +144,14 @@ const Clientes = () => {
         <IoIosSearch className="absolute left-1 top-2" />
       </div>
 
-      <div className="mt-15 mb-15 border border-gray-200 rounded-2xl overflow-hidden">
+      <div className="mt-15 mb-15 border border-gray-200 rounded-2xl overflow-hidden overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr>
-              <th className="p-3 text-left bg-gray-100">Nome</th>
-              <th className="p-3 text-left bg-gray-100">Email</th>
-              <th className="p-3 text-left bg-gray-100">Saldo</th>
-              <th className="p-3 text-left bg-gray-100">Ações</th>
+              <th className="p-3 text-left bg-gray-100 sm:text-md text-sm">Nome</th>
+              <th className="p-3 text-left bg-gray-100 sm:text-md text-sm">Email</th>
+              <th className="p-3 text-left bg-gray-100 sm:text-md text-sm">Saldo</th>
+              <th className="p-3 text-left bg-gray-100 sm:text-md text-sm">Ações</th>
             </tr>
           </thead>
 
@@ -159,25 +159,24 @@ const Clientes = () => {
             {clientesFiltrados.map((cliente) => (
               <tr key={cliente.id} className="border-t border-gray-200">
                 <td className="py-6 px-3 flex items-center gap-2">
-                  <FaUser size={18} />
-                  <span className="text-[15px]">{cliente.nome}</span>
+                  <FaUser size={15} className='hidden sm:flex' />
+                  <span className="text-[12px] sm:text-[15px]">{cliente.nome}</span>
                 </td>
 
-                <td className="py-6 px-3 text-[15px]">{cliente.email}</td>
+                <td className="py-6 px-3 sm:text-[15px] text-[12px] break-all sm:break-normal max-w-[160px] sm:max-w-none">{cliente.email}</td>
 
-                <td className="py-6 px-3 text-[15px]">
+                <td className="py-6 px-3 sm:text-[15px] text-[12px]">
                   R$ {Number(cliente.saldo || 0).toFixed(2)}
                 </td>
 
-                <td className="py-6 px-3 text-[15px] flex items-center gap-5">
+                <td className="py-6 px-3 flex items-center sm:gap-5 gap-2 justify-start align-middle">
                   <button onClick={() => abrirModalEdicao(cliente)}>
-                    <FaEdit size={20} className="cursor-pointer" />
+                    <FaEdit className="cursor-pointer sm:text-[20px] text-[15px]" />
                   </button>
 
                   <button onClick={() => deletarCliente(cliente.id)}>
                     <RiDeleteBin5Line
-                      size={20}
-                      className="cursor-pointer text-red-500 hover:text-red-700"
+                      className="cursor-pointer text-red-500 hover:text-shadow-red-700 sm:text-[20px] text-[15px]"
                     />
                   </button>
                 </td>

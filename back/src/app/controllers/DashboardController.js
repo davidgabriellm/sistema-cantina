@@ -1,3 +1,7 @@
+import Pedido from '../models/Pedido.js';
+import Cliente from '../models/Cliente.js';
+import { Op } from 'sequelize';
+
 class DashboardController {
   async index(req, res) {
     const inicioMes = new Date();
@@ -31,7 +35,7 @@ class DashboardController {
       },
     });
 
-     const clientesHoje = await Cliente.findAll({
+    const clientesHoje = await Cliente.findAll({
       where: {
         created_at: {
           [Op.between]: [hojeInicio, hojeFim],
@@ -40,12 +44,18 @@ class DashboardController {
       order: [['created_at', 'DESC']],
     });
 
+    const pedidosMes = await Pedido.count({
+      where: {
+        created_at: { [Op.gte]: inicioMes },
+      },
+    });
+
     return res.json({
       totalMes: totalMes || 0,
       novosClientesMes,
       pedidosHoje,
       pedidosMes,
-      clientesHoje
+      clientesHoje,
     });
   }
 }

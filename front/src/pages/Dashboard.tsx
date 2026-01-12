@@ -13,9 +13,16 @@ import Profile from '../assets/img.png';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import React from 'react';
 import { Separator } from '@/components/ui/separator';
-import { LuPanelTopOpen } from "react-icons/lu";
+import { LuPanelTopOpen } from 'react-icons/lu';
+import { useDashboard } from '@/hooks/dashboard/useDashboard';
 
 const Dashboard = () => {
+  const { data, isLoading } = useDashboard();
+
+  if (isLoading) {
+    return <div className="px-7 py-3">Carregando...</div>;
+  }
+
   return (
     <div className="px-7 py-3 flex flex-col relative w-full ">
       <h1 className="font-bold text-2xl">Dashboard</h1>
@@ -24,32 +31,41 @@ const Dashboard = () => {
       </p>
 
       <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md: gap-8">
+        {/* TOTAL VENDAS NO MÊS */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-center">
               <CardTitle>Total Vendas</CardTitle>
               <FaHandHoldingDollar className="ml-auto w-5 h-5" />
             </div>
-            <CardDescription>Total vendas em 90 dias</CardDescription>
+            <CardDescription>Total vendas no mês</CardDescription>
           </CardHeader>
 
           <CardContent>
-            <span className="text-base sm:text-lg font-bold">R$ 40.000</span>
+            <span className="text-base sm:text-lg font-bold">
+              R$ {data?.totalMes.toLocaleString('pt-BR')}
+            </span>
           </CardContent>
         </Card>
+
+        {/* NOVOS CLIENTES NO MÊS */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-center">
               <CardTitle>Novos Clientes</CardTitle>
               <LuUsers className="ml-auto w-5 h-5" />
             </div>
-            <CardDescription>Total de Clientes Durante 30 Dias</CardDescription>
+            <CardDescription>Total de Clientes no mês</CardDescription>
           </CardHeader>
 
           <CardContent>
-            <span className="text-base sm:text-lg font-bold">R$ 40.000</span>
+            <span className="text-base sm:text-lg font-bold">
+              {data?.novosClientesMes}
+            </span>
           </CardContent>
         </Card>
+
+        {/* PEDIDOS HOJE */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-center">
@@ -60,22 +76,30 @@ const Dashboard = () => {
           </CardHeader>
 
           <CardContent>
-            <span className="text-base sm:text-lg font-bold">R$ 40.000</span>
+            <span className="text-base sm:text-lg font-bold">
+              {data?.pedidosHoje}
+            </span>
           </CardContent>
         </Card>
-        <Card className='flex flex-col justify-between'>
+
+        {/* PEDIDOS NO MÊS */}
+        <Card className="flex flex-col justify-between">
           <CardHeader>
             <div className="flex items-center justify-center">
               <CardTitle>Total Pedidos</CardTitle>
               <CiBadgeDollar className="ml-auto w-5 h-5" />
             </div>
-            <CardDescription>Total de Pedidos em 30 dias</CardDescription>
+            <CardDescription>Total de Pedidos no mês</CardDescription>
           </CardHeader>
 
           <CardContent>
-            <span className="text-base sm:text-lg font-bold">R$ 40.000</span>
+            <span className="text-base sm:text-lg font-bold">
+              {data?.pedidosMes}
+            </span>
           </CardContent>
         </Card>
+
+        {/* CLIENTES HOJE */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-center">
@@ -87,61 +111,32 @@ const Dashboard = () => {
             </CardDescription>
           </CardHeader>
 
+
           <ScrollArea className="w-full h-16 rounded-md border-none">
             <div className="p-2">
-              <React.Fragment>
-                <div className='flex justify-start items-center gap-3'>
-                <div className="flex items-center justify-center bg-gray-700 rounded-full w-9 h-9">
-                  <img
-                    src={Profile}
-                    alt="avatar"
-                    className="w-7 h-7 object-contain"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <h1>david gabriel lima martins</h1>
-                  <h2 className='font-light text-muted-foreground'>david@gmail.com</h2>
-                </div>
-                </div>
-                <Separator className="my-1" />
-              </React.Fragment>
-              <React.Fragment>
-                <div className='flex justify-start items-center gap-3'>
-                <div className="flex items-center justify-center bg-gray-700 rounded-full w-9 h-9">
-                  <img
-                    src={Profile}
-                    alt="avatar"
-                    className="w-7 h-7 object-contain"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <h1>david gabriel lima martins</h1>
-                  <h2 className='font-light text-muted-foreground'>david@gmail.com</h2>
-                </div>
-                </div>
-                <Separator className="my-1" />
-              </React.Fragment>
-              <React.Fragment>
-                <div className='flex justify-start items-center gap-3'>
-                <div className="flex items-center justify-center bg-gray-700 rounded-full w-9 h-9">
-                  <img
-                    src={Profile}
-                    alt="avatar"
-                    className="w-7 h-7 object-contain"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <h1>david gabriel lima martins</h1>
-                  <h2 className='font-light text-muted-foreground'>david@gmail.com</h2>
-                </div>
-                </div>
-                <Separator className="my-1" />
-              </React.Fragment>
-            
+              {!data?.clientesHoje && <div className='text-center text-sm sm:text-md'>nenhum cliente encontrado!</div>}
+              {data?.clientesHoje.map(cliente => (
+                <React.Fragment key={cliente.id}>
+                  <div className="flex justify-start items-center gap-3">
+                    <div className="flex items-center justify-center bg-gray-700 rounded-full w-9 h-9">
+                      <img
+                        src={cliente.avatarUrl ?? Profile}
+                        alt="avatar"
+                        className="w-7 h-7 object-contain"
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <h1>{cliente.nome}</h1>
+                      <h2 className="font-light text-muted-foreground">
+                        {cliente.email}
+                      </h2>
+                    </div>
+                  </div>
+                  <Separator className="my-1" />
+                </React.Fragment>
+              ))}
             </div>
           </ScrollArea>
-
-          
         </Card>
       </section>
     </div>

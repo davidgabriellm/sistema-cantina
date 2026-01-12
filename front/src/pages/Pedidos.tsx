@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { IoAddOutline } from "react-icons/io5";
 import { IoIosSearch } from "react-icons/io";
 import {FaMoneyBillWave } from "react-icons/fa";
@@ -158,7 +158,7 @@ const Pedidos = () => {
           reset({ clienteId: 0, itens: [] });
           setOpenModal(true);
         }}
-        className="absolute right-6 top-4 cursor-pointer flex gap-3 bg-blue-600 p-3 rounded-2xl items-center text-white"
+        className="absolute left-6 top-20 cursor-pointer flex gap-3 bg-blue-600 p-3 rounded-2xl items-center text-white"
       >
         <IoAddOutline />
         <span className="text-[14px]">Novo Pedido</span>
@@ -169,13 +169,13 @@ const Pedidos = () => {
         Gerencie os pedidos da cantina
       </p>
 
-      <div className="mt-5 flex gap-4 items-center">
+      <div className="mt-20 flex gap-4 items-center">
         <select
           value={statusFiltro}
           onChange={(e) =>
             setStatusFiltro(e.target.value as Pedido["status"] | "")
           }
-          className="rounded border border-gray-300 py-1 px-3 outline-none text-sm"
+          className="rounded border border-gray-300 py-1 px-3 outline-none text-s w-1/2 sm:w-[120px]"
         >
           <option value="">Todos</option>
           <option value="aberto">Aberto</option>
@@ -183,29 +183,28 @@ const Pedidos = () => {
           <option value="cancelado">Cancelado</option>
         </select>
 
-        <div className="relative w-1/3">
+        <div className="relative w-1/2 sm:w-1/2">
           <input
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="rounded border border-gray-300 py-0.5 px-7 outline-none placeholder:text-sm w-full"
-            placeholder="Buscar pedido por ID, cliente ou produto..."
+            placeholder="Buscar pedido por cliente ou produto..."
           />
           <IoIosSearch className="absolute left-1 top-2" />
         </div>
       </div>
 
-      <div className="mt-8 mb-15 border border-gray-200 rounded-2xl overflow-hidden">
+      <div className="mt-8 mb-15 border border-gray-200 rounded-2xl overflow-hidden overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr>
-              <th className="p-3 text-left bg-gray-100">Pedido</th>
-              <th className="p-3 text-left bg-gray-100">Cliente</th>
-              <th className="p-3 text-left bg-gray-100">Itens</th>
-              <th className="p-3 text-left bg-gray-100">Total</th>
-              <th className="p-3 text-left bg-gray-100">Status</th>
-              <th className="p-3 text-left bg-gray-100">Data</th>
-              <th className="p-3 text-left bg-gray-100">Ações</th>
+              <th className="p-3 text-left bg-gray-100 sm:text-md text-sm">Cliente</th>
+              <th className="p-3 text-left bg-gray-100 sm:text-md text-sm">Itens</th>
+              <th className="p-3 text-left bg-gray-100 sm:text-md text-sm">Total</th>
+              <th className="p-3 text-left bg-gray-100 sm:text-md text-sm">Status</th>
+              <th className="p-3 text-left bg-gray-100 sm:text-md text-sm">Data</th>
+              <th className="p-3 text-left bg-gray-100 sm:text-md text-sm">Ações</th>
             </tr>
           </thead>
 
@@ -215,21 +214,20 @@ const Pedidos = () => {
 
               return (
                 <tr key={pedido.id} className="border-t border-gray-200">
-                  <td className="py-6 px-3 text-[15px]">#{pedido.id}</td>
-                  <td className="py-6 px-3 text-[15px]">
+                  <td className="py-6 px-3 text-[12px] sm:text-[15px]">
                     {pedido.cliente?.nome ?? "N/A"}
                   </td>
-                  <td className="py-6 px-3 text-[15px]">
-                    <div className="text-sm text-gray-600">
+                  <td className="py-6 px-3 sm:text-[15px] text-[12px]">
+                    <div className="sm:text-[15px] text-[12px] text-gray-600">
                       {pedido.itens?.length ?? 0} item(s)
                     </div>
                   </td>
-                  <td className="py-6 px-3 text-[15px] font-semibold">
+                  <td className="py-6 px-3 sm:text-[15px] text-[12px] font-semibold">
                     R$ {(Number(pedido.total) || 0).toFixed(2)}
                   </td>
                   <td className="py-6 px-3 text-[15px]">
                     <span
-                      className={`px-3 py-1 rounded-full text-white text-xs ${
+                      className={`px-2 sm:px-3 py-1 rounded-full text-white sm:text-[15px] text-[10px] ${
                         status === "aberto"
                           ? "bg-yellow-500"
                           : status === "pago"
